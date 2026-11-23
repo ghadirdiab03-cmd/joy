@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>كنز البهجة 🎉</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg1:#ffe8f1;--bg2:#fff3c9;--card:#ffffff;--ink:#3b1f4a;--pink:#ff4d8d;--teal:#12b5a6;--gold:#e8a900;--ok:#0c8f5b;--bad:#d6336c;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg1:#2b1238;--bg2:#3a2410;--card:#3a2347;--ink:#fff1f7;--ok:#4fe0a2;--bad:#ff7aa8}}
+:root[data-theme="dark"]{--bg1:#2b1238;--bg2:#3a2410;--card:#3a2347;--ink:#fff1f7;--ok:#4fe0a2;--bad:#ff7aa8}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;min-height:100vh;font-family:'Cairo',Tahoma,Arial,sans-serif;color:var(--ink);background:linear-gradient(160deg,var(--bg1),var(--bg2));background-attachment:fixed;overflow-x:hidden}
+#app{max-width:560px;margin:0 auto;padding:18px 16px 40px}
+.card{background:var(--card);border-radius:28px;padding:22px 18px;box-shadow:0 8px 0 rgba(255,77,141,.35)}
+.card.gold{box-shadow:0 8px 0 var(--gold);border:4px solid var(--gold)}
+.tag{display:inline-block;background:var(--pink);color:#fff;border-radius:99px;padding:4px 16px;font-weight:800;font-size:14px}
+.gold .tag{background:var(--gold)}
+h1{font-size:28px;line-height:1.5;margin:14px 0 18px;font-weight:900}
+.opt{display:block;width:100%;text-align:right;font:inherit;font-weight:800;font-size:18px;color:var(--ink);background:transparent;border:3px solid var(--teal);border-radius:18px;padding:13px 16px;margin:10px 0;cursor:pointer;transition:transform .12s}
+.opt:active{transform:scale(.97)}
+.opt.x{border-color:var(--bad);opacity:.55;text-decoration:line-through}
+.res{margin-top:16px;border-radius:20px;padding:18px;font-weight:800;font-size:19px;line-height:1.8;text-align:center}
+.res.ok{background:rgba(18,181,166,.18)}.res.bad{background:rgba(214,51,108,.15)}
+.place{display:block;font-size:26px;font-weight:900;color:var(--ok);margin:6px 0}
+.hunt{display:block;margin-top:10px;color:var(--gold);font-weight:900}
+#mus{position:fixed;top:calc(10px + env(safe-area-inset-top,0px));left:10px;z-index:5;border:0;border-radius:99px;background:var(--card);color:var(--ink);font:inherit;font-weight:800;padding:8px 14px;box-shadow:0 3px 0 rgba(0,0,0,.2);cursor:pointer}
+.conf{position:fixed;top:-40px;font-size:28px;pointer-events:none;animation:fall 3s linear forwards;z-index:9}
+@keyframes fall{to{transform:translateY(110vh) rotate(540deg)}}
+@media (prefers-reduced-motion:reduce){.conf{display:none}}
+.wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px}td,th{border:1px solid #9995;padding:6px 8px;text-align:right}
+tr.g td{background:rgba(232,169,0,.3);font-weight:800}
+.bar{display:flex;gap:10px;align-items:center;margin:12px 0}
+.bar button{font:inherit;font-weight:800;border:0;border-radius:14px;padding:10px 18px;background:var(--pink);color:#fff;cursor:pointer}
+.sheet{display:none}
+.sheet .qr{width:16cm;height:16cm;margin:0 auto;padding:.6cm;background:#fff;border:.3cm solid #222;border-radius:.6cm}
+.sheet.g .qr{border-color:#e8a900}
+.sheet .qr img,.sheet .qr canvas{width:100%!important;height:100%!important;display:block}
+.sheet .lbl{text-align:center;font-size:12px;color:#777;margin-top:.4cm}
+@media print{#mus,.screen{display:none!important}body{background:#fff}.sheet{display:block;page-break-after:always;padding-top:3.5cm}#app{max-width:none;padding:0}}
+</style>
+</head>
+<body>
+<button id="mus" type="button">🎵 موسيقى</button>
+<div id="app"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+const GOLD_PLACE="مكتب مس أميرة";
+const GID=[13,29,44];
+const ICT="استف الـ ICT";
+const P=["الريسبشن","مكتب مس أماني","مكتب الإشراف","مكتب مس خلود","استف الماث","استف العربي","استف الإنجليزي","مكتب مس إنجي","استف السوشيال"];
+// [سؤال, الصح, غلط, غلط, غلط]
+const R=[
+["أكبر كوكب في المجموعة الشمسية؟","المشتري","زحل","المريخ","نبتون"],
+["عاصمة أستراليا؟","كانبرا","سيدني","ملبورن","بيرث"],
+["كام عظمة في جسم الإنسان البالغ؟","206","300","150","212"],
+["مين رسم الموناليزا؟","ليوناردو دافنشي","بيكاسو","فان جوخ","مايكل أنجلو"],
+["أسرع حيوان بري؟","الفهد","الأسد","الحصان","الغزال"],
+["النباتات بتمتص أنهي غاز في البناء الضوئي؟","ثاني أكسيد الكربون","الأكسجين","النيتروجين","الهيليوم"],
+["كام ضلع في المسدس؟","6","5","8","7"],
+["أطول نهر في أفريقيا؟","النيل","الكونغو","النيجر","الزامبيزي"],
+["لغز: إيه اللي كل ما تاخد منه بيكبر؟","الحفرة","الجبل","الفلوس","العمر"],
+["كام يوم في السنة الكبيسة؟","366","365","364","367"],
+["أصغر دولة في العالم؟","الفاتيكان","موناكو","مالطا","سان مارينو"],
+["مين اشتهر باختراع المصباح الكهربائي؟","إديسون","تسلا","نيوتن","جراهام بيل"],
+["كام لون في قوس قزح؟","7","6","8","5"],
+["معدن بيبقى سائل في درجة حرارة الغرفة؟","الزئبق","الحديد","النحاس","الألمنيوم"],
+["لما المدرس يقول «آخر مرة أقولها»، الأغلب إنه؟","هيقولها تاني بكرة 😅","فعلاً آخر مرة","هيسكت للأبد","هيجيب بديل"],
+["أكتر حاجة بتختفي من الاستف؟","الأقلام والدباسات","الكراسي","السبورة","الباب"],
+["الهرم الأكبر في الجيزة بناه الملك؟","خوفو","خفرع","منكاورع","زوسر"],
+["كام لاعب في فريق كرة القدم داخل الملعب؟","11","10","12","9"],
+["أكبر محيط في العالم؟","الهادي","الأطلسي","الهندي","المتجمد الشمالي"],
+["ناتج 7 × 8؟","56","54","63","48"],
+["لغز: إيه اللي ليه أسنان ومبيعضش؟","المشط","الأسد","الكرسي","القلم"],
+["أي كوكب بيتسمى الكوكب الأحمر؟","المريخ","الزهرة","عطارد","أورانوس"],
+["كام حرف في الأبجدية الإنجليزية؟","26","24","28","25"],
+["أكتر مشروب بيعيش عليه المدرسين في أول حصة؟","القهوة ☕","الميه","العصير","الشوربة"],
+["أكبر عضو في جسم الإنسان؟","الجلد","الكبد","القلب","الرئة"],
+["عاصمة اليابان؟","طوكيو","كيوتو","أوساكا","سول"],
+["كام دقيقة في 3 ساعات؟","180","120","150","360"],
+["لغز: إيه اللي لو قلت اسمه بيختفي؟","الصمت","الهوا","الصوت","الضحك"],
+["أسرع حاجة بتفرّح أي مدرس؟","إجازة رسمية مفاجئة 🏖️","واجبات كتير للتصحيح","اجتماع طارئ","امتحان مفاجئ"],
+["أطول حيوان في العالم؟","الزرافة","الفيل","النعامة","الجمل"],
+["معاك 3 تفاحات وأخدت منهم 2، كام تفاحة معاك؟","2","1","3","5"],
+["كام لاعب في فريق السلة داخل الملعب؟","5","6","7","11"],
+["عاصمة كندا؟","أوتاوا","تورنتو","فانكوفر","مونتريال"],
+["مين لقب «أمير الشعراء»؟","أحمد شوقي","حافظ إبراهيم","صلاح جاهين","أمل دنقل"],
+["كام ثانية في الساعة؟","3600","360","6000","1200"],
+["أنهي حيوان بيعرف ينام وهو واقف؟","الحصان","القطة","الكلب","الأرنب"],
+["الرمز الكيميائي Au هو؟","الذهب ✨","الفضة","الألومنيوم","النحاس"],
+["أكبر قارة في العالم مساحةً؟","آسيا","أفريقيا","أمريكا الشمالية","أوروبا"],
+["أحلى صوت في المدرسة بالنسبة للمدرس؟","جرس آخر حصة 🔔","جرس أول حصة","جرس الطابور","جرس الاجتماع"],
+["أكتر جملة المدرس بيسمعها في اليوم؟","«يا مس!» 😂","«صباح الخير»","«شكراً»","«أنا آسف»"],
+["كام حرف (ضلع) في المكعب؟","12","8","6","10"],
+["أي لون مش من الألوان الأساسية (أحمر - أزرق - أصفر)؟","الأخضر","الأحمر","الأزرق","الأصفر"],
+["أقصر شهر في السنة؟","فبراير","أبريل","يونيو","سبتمبر"],
+["أشهر لعبة فيها ملك وملكة وفيل وحصان؟","الشطرنج","الطاولة","الدومينو","الكوتشينة"],
+["الطالب بيقول «نسيت الواجب في البيت»، الحقيقة غالباً؟","ما حلّوش بصراحة 🙈","فعلاً نسيه","الكلب أكله","العربية خدته"],
+["أحلى جملة في آخر اليوم الدراسي؟","«يلا نمشي!»","«في ملحوظة بسيطة»","«اجتماع بعد الدوام»","«الحصة لسه مخلصتش»"],
+["كام كوكب في المجموعة الشمسية؟","8","9","7","10"]
+];
+const G=[
+["🏆 سؤال ذهبي: لو قالوا «اجتماع خمس دقايق بس»، هيخلص بعد؟","ساعة ونص على الأقل 😭","خمس دقايق فعلاً","ولا ثانية","بكرة"],
+["🏆 سؤال ذهبي: أكتر جملة المدرس بيقولها كل يوم ومحدش بيسمعها؟","«اسكتوا شوية لو سمحتوا»","«صباح الخير يا جماعة»","«هنخلص بدري»","«حلّوا الواجب»"],
+["🏆 سؤال ذهبي رخم: كام مرة تقدر تطرح 5 من 25؟","مرة واحدة بس (بعدها بقى 20!)","5 مرات","4 مرات","ولا مرة"]
+];
+const ALL=[];
+(function(){let r=0,k=0,gi=0;
+for(let n=1;n<=50;n++){
+ if(GID.includes(n)){ALL.push({n,gold:true,d:G[gi++],place:GOLD_PLACE});}
+ else{const place=(r%5===0)?ICT:P[k++%9];ALL.push({n,gold:false,d:R[r],place});r++;}
+}})();
+
+const app=document.getElementById('app');
+let ac=null,tm=null,musicOn=false,muted=false;
+const N=[523,659,784,659,587,698,880,698,659,784,988,784,698,659,587,523];
+function startMusic(){try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')ac.resume();if(tm)return;let s=0;
+tm=setInterval(()=>{const o=ac.createOscillator(),g=ac.createGain(),t=ac.currentTime;o.type='triangle';o.frequency.value=N[s++%N.length];g.gain.setValueAtTime(.12,t);g.gain.exponentialRampToValueAtTime(.001,t+.35);o.connect(g);g.connect(ac.destination);o.start(t);o.stop(t+.4)},280);musicOn=true;}catch(e){}
+upd();}
+function stopMusic(){clearInterval(tm);tm=null;musicOn=false;upd();}
+function upd(){document.getElementById('mus').textContent=musicOn?'🔇 إيقاف الموسيقى':'🎵 موسيقى';}
+document.getElementById('mus').onclick=()=>{if(musicOn){muted=true;stopMusic();}else{muted=false;startMusic();}};
+document.addEventListener('pointerdown',()=>{if(!musicOn&&!muted)startMusic();},{once:true});
+
+function confetti(){const e=['🎉','✨','🎈','⭐','🎊','💛'];for(let i=0;i<30;i++){const s=document.createElement('span');s.className='conf';s.textContent=e[i%e.length];s.style.left=Math.random()*100+'vw';s.style.animationDelay=Math.random()*1.2+'s';document.body.appendChild(s);setTimeout(()=>s.remove(),4500);}}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+function home(){app.innerHTML='<div class="card"><span class="tag">🎉 كنز البهجة</span><h1>أهلاً يا أحلى مدرسين!</h1><p style="font-size:18px;line-height:1.9;font-weight:500">امسح أي QR code في المدرسة، جاوب على السؤال صح، واستلم هديتك. وفي 3 QR ذهبيين مستخبيين… هديتهم أكبر 😉</p></div>';}
+
+function quiz(n){
+ const q=ALL[n-1];if(!q)return home();
+ const [txt,ok,...bad]=q.d;
+ const opts=shuffle([ok,...bad]);
+ app.innerHTML='<div class="card'+(q.gold?' gold':'')+'"><span class="tag">'+(q.gold?'⭐ QR ذهبي':'🎁 سؤال البهجة')+'</span><h1></h1><div id="o"></div><div id="r"></div></div>';
+ app.querySelector('h1').textContent=txt;
+ const box=document.getElementById('o'),r=document.getElementById('r');
+ opts.forEach(t=>{const b=document.createElement('button');b.type='button';b.className='opt';b.textContent=t;
+  b.onclick=()=>{
+   if(t===ok){box.querySelectorAll('button').forEach(x=>x.disabled=true);confetti();
+    r.innerHTML=q.gold?
+     '<div class="res ok">🏆 مبروك! لقيت الـ QR الذهبي!<br>هديتك الكبيرة عند:<span class="place"></span></div>':
+     '<div class="res ok">🎉 إجابة صح! روح استلم هديتك من:<span class="place"></span><span class="hunt">🔎 وابحث عن الـ QR code الذهبي!</span></div>';
+    r.querySelector('.place').textContent=q.place;
+   }else{b.classList.add('x');b.disabled=true;
+    r.innerHTML='<div class="res bad">😅 جرب تاني!<span class="hunt">ودوّر على الـ QR code الذهبي 🔎</span></div>';}
+  };box.appendChild(b);});
+}
+
+function admin(){
+ const base=location.href.split('#')[0];
+ let h='<div class="card screen"><span class="tag">لوحة الطباعة</span><h1>50 QR جاهزين للطباعة</h1><div class="bar"><button type="button" onclick="window.print()">🖨️ اطبع (ورقة لكل QR)</button></div><p style="font-weight:500">الصفوف الذهبية هي الـ 3 QR الذهبي. كل QR بيطبع بمقاس 16×16 سم على A4.</p><div class="wrap"><table><tr><th>#</th><th>النوع</th><th>الهدية من</th></tr>';
+ ALL.forEach(q=>{h+='<tr'+(q.gold?' class="g"':'')+'><td>'+q.n+'</td><td>'+(q.gold?'⭐ ذهبي':'عادي')+'</td><td>'+q.place+'</td></tr>';});
+ h+='</table></div></div>';
+ ALL.forEach(q=>{h+='<div class="sheet'+(q.gold?' g':'')+'"><div class="qr" id="qr'+q.n+'"></div><div class="lbl">'+q.n+(q.gold?' ★':'')+'</div></div>';});
+ app.innerHTML=h;
+ ALL.forEach(q=>{try{new QRCode(document.getElementById('qr'+q.n),{text:base+'#q'+q.n,width:640,height:640,correctLevel:QRCode.CorrectLevel.M});}catch(e){}});
+ document.querySelectorAll('.sheet').forEach(s=>s.style.display='block');
+ const st=document.createElement('style');st.textContent='@media screen{.sheet{margin:20px 0}.sheet .qr{width:min(100%,320px);height:auto;aspect-ratio:1}}';document.head.appendChild(st);
+}
+
+function route(){const h=location.hash.slice(1);const m=/^q(\d+)$/.exec(h);window.scrollTo(0,0);
+ if(h==='admin')admin();else if(m)quiz(+m[1]);else home();}
+window.addEventListener('hashchange',route);route();
+</script>
+</body>
+</html>
